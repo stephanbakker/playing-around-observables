@@ -18,10 +18,41 @@ describe('Observable', () => {
             
             obs.subscribe(spy);
 
-            expect(spy.callCount).to.equal(3); 
+            expect(spy.callCount).to.equal(3);
+            expect(spy.calledWith('This')).to.be.true;
+            expect(spy.calledWith('is')).to.be.true;
+            expect(spy.calledWith('cool!')).to.be.true;
 
         })
 
+    });
+
+    describe('Observer map', (done) => {
+
+        it('should map the input', (done) => {
+            const obs = Observable.create(observer => {
+                observer.onNext('can');
+                observer.onNext('be');
+                observer.onNext('mapped');
+
+                observer.onCompleted();
+            });
+
+            const obsResults = [];
+            obs
+                .map(val => val += ' yo')
+                .subscribe(result => {
+
+                    obsResults.push(result);
+
+                    // shortcut for now, change after onCompleted is implemented
+                    if (obsResults.length === 3) {
+                        expect(obsResults).to.deep.equal(['can yo', 'be yo', 'mapped yo']);
+                        done()
+                    }
+                });
+
+        });
     });
 
     describe('just', () => {

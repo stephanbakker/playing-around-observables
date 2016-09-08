@@ -13,6 +13,11 @@ class Observable {
             cb(this.observer.next());
         }
     }
+
+    map(mapFn) {
+        this.observer._iterable.values = this.observer._iterable.values.map(mapFn);
+        return this;
+    }
 }
 
 
@@ -26,11 +31,11 @@ class Observer {
     }
 
     onNext(value) {
-        this._iterable._values.push(value);
+        this._iterable.add(value);
     }
 
     onCompleted() {
-        // done
+        // TODO 
     }
 
     next() {
@@ -49,6 +54,18 @@ class Iteriple {
     constructor() {
         this._cursor = 0;
         this._values = [];
+    }
+
+    get values() {
+        return this._values;
+    }
+
+    set values(newValues) {
+        this._values = newValues;
+    }
+
+    add(val) {
+        this._values.push(val);
     }
 
     next() {
